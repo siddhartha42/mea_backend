@@ -10,10 +10,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'MEA',
-  password: 'postgres',
+  user: 'mea',
+  host: 'dpg-cg6e1kpmbg5ab7kbf700-a',
+  database: 'mea_acc_db',
+  password: '2WZUd641PAuPIl3H5ALEkK4Wiot5fK2M',
   port: 5432,
 });
 
