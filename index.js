@@ -1,4 +1,5 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const cors = require('cors');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
@@ -49,6 +50,8 @@ app.post('/submit-form', (req, res) => {
   const { name, gender, email, phone, from_date, to_date } = req.body;
   res.send({name, gender, phone ,email, from_date, to_date});
 
+  const emailId = email;
+
   const text = 'INSERT INTO public."Form_Responses" ("Name", "Gender", "Email_id", "phone_no", "From_Date", "To_Date") VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
   const values = [name, gender, email, phone, from_date, to_date];
 
@@ -59,6 +62,33 @@ app.post('/submit-form', (req, res) => {
   .catch(err => {
     console.error(err);
   });
+
+  let mailTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'mea@smail.iitm.ac.in',
+        pass: 'GoMechanica2023',
+    },
+    tls: {
+      rejectUnauthorized: false,
+    }
+});
+
+
+let mailDetails = {
+  from: 'mea@smail.iitm.ac.in',
+  to: emailId,
+  subject: "ACCOMODATION|MECHANICA'23",
+  html: { path: 'mail.html' }
+};
+
+mailTransporter.sendMail(mailDetails, function(err, data) {
+  if(err) {
+      console.log('Error Occurs');
+  } else {
+      console.log('Email sent successfully');
+  }
+});
 });
 
 app.listen(3000, () => {
